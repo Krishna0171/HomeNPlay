@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import { automation } from '../services/automation';
 import { Skeleton } from '../components/Loader';
 import { ProductCard } from '../components/ProductCard';
-import { ShoppingCart, ArrowLeft, ShieldCheck, Truck, Sparkles, Share2, Twitter, Facebook, Link as LinkIcon, Star, User, MessageCircle } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, ShieldCheck, Truck, Sparkles, Twitter, Facebook, Link as LinkIcon, Star, MessageCircle } from 'lucide-react';
 
 interface ProductDetailsProps {
   productId: string;

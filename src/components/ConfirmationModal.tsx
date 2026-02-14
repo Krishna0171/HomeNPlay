@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, AlertTriangle, LogOut, Trash2, HelpCircle } from 'lucide-react';
+import { AlertTriangle, Trash2, HelpCircle } from 'lucide-react';
 
 export interface ConfirmationModalProps {
   isOpen: boolean;

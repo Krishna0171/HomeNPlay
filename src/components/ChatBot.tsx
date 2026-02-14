@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Sparkles, User, Package, ChevronRight, Navigation } from 'lucide-react';
+import { MessageCircle, X, Send, Sparkles, User, Navigation } from 'lucide-react';
 import { automation } from '../services/automation';
 
 interface Message {

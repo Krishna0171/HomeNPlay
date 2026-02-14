@@ -185,12 +185,12 @@ const App: React.FC = () => {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const mobile = formData.get('mobile') as string;
+    // const mobile = formData.get('mobile') as string;
     const name = formData.get('name') as string;
     
     setIsGlobalLoading(true);
     try {
-      const loggedInUser = await api.login(mobile, '123456', '');
+      // const loggedInUser = await api.login(mobile, '123456', '');
       if (name) await api.updateUserProfile({ name });
       setUser(api.getCurrentUser());
       setIsGlobalLoading(false);

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ShoppingCart, Package, LogOut, UserCircle, ShoppingBag, ChevronDown, History, Heart } from 'lucide-react';
+import { ShoppingCart, Package, Heart } from 'lucide-react';
 import type { User as UserType } from '../types';
 
 interface NavbarProps {
@@ -20,8 +20,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate, 
   onShopClick 
 }) => {
-  const [showUserMenu, setShowUserMenu] = useState(false);
-
+  const [_, setShowUserMenu] = useState(false);
+  console.log("Navbar rendered with user:", user, onLogout);
+  
   const navLinks = [
     { name: 'Home', id: 'home' },
     { name: 'Shop', id: 'shop' },

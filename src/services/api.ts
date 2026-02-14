@@ -140,7 +140,7 @@ class LocalApiService {
     return user ? JSON.parse(user) : null;
   }
 
-  async login(mobile: string, password?: string, email?: string): Promise<User> {
+  async login(mobile: string, _?: string, email?: string): Promise<User> {
     const newUser: User = { 
       id: `U-${Math.random().toString(36).substr(2, 6)}`, 
       mobile, 

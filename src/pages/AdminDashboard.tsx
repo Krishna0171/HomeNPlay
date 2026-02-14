@@ -1,16 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import type { Product, Order, DashboardStats, OrderStatus, Category, SupportTicket, TicketStatus, Review } from '../types';
+import type { Product, Order, DashboardStats, OrderStatus, Category, SupportTicket,  Review } from '../types';
 import { Loader } from '../components/Loader';
 import { ConfirmationModal } from '../components/ConfirmationModal';
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  LineChart, Line, AreaChart, Area
-} from 'recharts';
-import { 
-  ShoppingBag, Users, DollarSign, AlertCircle, Plus, 
-  Search, Filter, ExternalLink, CheckCircle, Package, Truck, Trash2, X, MessageSquare, Send, User, ShieldCheck, Clock, Pencil, ArrowUpDown, ChevronRight, Star
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import {
+  ShoppingBag, DollarSign, Plus,
+  Search, CheckCircle, Package, Truck, Trash2, X, MessageSquare, Send, Pencil, Star
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -27,17 +24,22 @@ export const AdminDashboard: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   
   const [productSearch, setProductSearch] = useState('');
-  const [productCategoryFilter, setProductCategoryFilter] = useState<Category | 'All'>('All');
-  const [productSortBy, setProductSortBy] = useState<'newest' | 'price-low' | 'price-high' | 'stock-low' | 'name-az'>('newest');
+  // const [productCategoryFilter, setProductCategoryFilter] = useState<Category | 'All'>('All');
+  // const [productSortBy, setProductSortBy] = useState<'newest' | 'price-low' | 'price-high' | 'stock-low' | 'name-az'>('newest');
 
   const [orderSearch, setOrderSearch] = useState('');
-  const [orderStatusFilter, setOrderStatusFilter] = useState<OrderStatus | 'All'>('All');
-  const [orderSortBy, setOrderSortBy] = useState<'newest' | 'oldest' | 'amount-high' | 'amount-low'>('newest');
+  // const [orderStatusFilter, setOrderStatusFilter] = useState<OrderStatus | 'All'>('All');
+  // const [orderSortBy, setOrderSortBy] = useState<'newest' | 'oldest' | 'amount-high' | 'amount-low'>('newest');
 
   const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
   const [adminReply, setAdminReply] = useState('');
   const [ticketSearch, setTicketSearch] = useState('');
-  const [ticketFilter, setTicketFilter] = useState<TicketStatus | 'All'>('All');
+  // const [ticketFilter, setTicketFilter] = useState<TicketStatus | 'All'>('All');
+  const ticketFilter = 'All';
+  const orderSortBy = 'newest';
+  const orderStatusFilter = 'All';
+  const productCategoryFilter = 'All';
+  const productSortBy = 'newest';
 
   const [reviewSearch, setReviewSearch] = useState('');
 
@@ -78,12 +80,12 @@ export const AdminDashboard: React.FC = () => {
     loadData();
   };
 
-  const handleUpdateTicketStatus = async (ticketId: string, status: TicketStatus) => {
-    setLoading(true);
-    const updated = await api.updateTicketStatus(ticketId, status);
-    if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
-    loadData();
-  };
+  // const handleUpdateTicketStatus = async (ticketId: string, status: TicketStatus) => {
+  //   setLoading(true);
+  //   const updated = await api.updateTicketStatus(ticketId, status);
+  //   if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
+  //   loadData();
+  // };
 
   const confirmDeleteProduct = async () => {
     if (productToDelete) {
@@ -138,15 +140,15 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  const getTicketStatusColor = (status: TicketStatus) => {
-    switch (status) {
-      case 'Open': return 'bg-blue-100 text-blue-700';
-      case 'Pending': return 'bg-amber-100 text-amber-700';
-      case 'Resolved': return 'bg-emerald-100 text-emerald-700';
-      case 'Closed': return 'bg-slate-200 text-slate-600';
-      default: return 'bg-slate-100 text-slate-700';
-    }
-  };
+  // const getTicketStatusColor = (status: TicketStatus) => {
+  //   switch (status) {
+  //     case 'Open': return 'bg-blue-100 text-blue-700';
+  //     case 'Pending': return 'bg-amber-100 text-amber-700';
+  //     case 'Resolved': return 'bg-emerald-100 text-emerald-700';
+  //     case 'Closed': return 'bg-slate-200 text-slate-600';
+  //     default: return 'bg-slate-100 text-slate-700';
+  //   }
+  // };
 
   const filteredTickets = tickets.filter(t => {
     const matchesFilter = ticketFilter === 'All' || t.status === ticketFilter;
@@ -167,9 +169,9 @@ export const AdminDashboard: React.FC = () => {
     })
     .sort((a, b) => {
       switch (orderSortBy) {
-        case 'oldest': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        case 'amount-high': return b.total - a.total;
-        case 'amount-low': return a.total - b.total;
+        // case 'oldest': return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        // case 'amount-high': return b.total - a.total;
+        // case 'amount-low': return a.total - b.total;
         case 'newest':
         default: return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
@@ -185,10 +187,10 @@ export const AdminDashboard: React.FC = () => {
     })
     .sort((a, b) => {
       switch (productSortBy) {
-        case 'price-low': return a.price - b.price;
-        case 'price-high': return b.price - a.price;
-        case 'stock-low': return a.stock - b.stock;
-        case 'name-az': return a.name.localeCompare(b.name);
+        // case 'price-low': return a.price - b.price;
+        // case 'price-high': return b.price - a.price;
+        // case 'stock-low': return a.stock - b.stock;
+        // case 'name-az': return a.name.localeCompare(b.name);
         case 'newest':
         default: return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
