@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import type { Product, Review } from '../types';
 import { api } from '../services/api';
 import { automation } from '../services/automation';
@@ -8,22 +9,18 @@ import { ProductCard } from '../components/ProductCard';
 import { ShoppingCart, ArrowLeft, ShieldCheck, Truck, Sparkles, Twitter, Facebook, Link as LinkIcon, Star, MessageCircle } from 'lucide-react';
 
 interface ProductDetailsProps {
-  productId: string;
-  onBack: () => void;
   onAddToCart: (p: Product) => void;
-  onViewProduct: (id: string) => void;
   favorites: string[];
   onToggleFavorite: (id: string) => void;
 }
 
-export const ProductDetails: React.FC<ProductDetailsProps> = ({ 
-  productId, 
-  onBack, 
+export const ProductDetails: React.FC<ProductDetailsProps> = ({
   onAddToCart,
-  onViewProduct,
   favorites,
   onToggleFavorite
 }) => {
+  const { id: productId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [insights, setInsights] = useState<string[]>([]);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -31,7 +28,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
   const [loading, setLoading] = useState(true);
   const [insightsLoading, setInsightsLoading] = useState(true);
   const [canReview, setCanReview] = useState(false);
-  
+
   // Review Form State
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [rating, setRating] = useState(5);
@@ -52,21 +49,21 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
       const p = allProducts.find(item => item.id === productId);
       if (p) {
         setProduct(p);
-        
+
         const related = allProducts
           .filter(item => item.category === p.category && item.id !== p.id && item.isActive)
           .slice(0, 4);
         setRelatedProducts(related);
-        
+
         await loadReviews();
-        
+
         if (currentUser) {
-          const eligible = await api.canUserReviewProduct(currentUser.id, productId);
+          const eligible = await api.canUserReviewProduct(currentUser.id, p.id);
           setCanReview(eligible);
         }
 
         setLoading(false);
-        
+
         const aiInsights = await automation.generateProductInsights(p);
         setInsights(aiInsights);
         setInsightsLoading(false);
@@ -78,8 +75,8 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentUser || !comment.trim()) return;
-    
+    if (!currentUser || !productId || !comment.trim()) return;
+
     setIsSubmittingReview(true);
     await api.addReview({
       productId,
@@ -89,7 +86,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
       comment,
       isVerifiedPurchase: canReview
     });
-    
+
     await loadReviews();
     setComment('');
     setShowReviewForm(false);
@@ -99,7 +96,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
   const handleShare = (platform: 'twitter' | 'facebook' | 'native' | 'copy') => {
     if (!product) return;
     const url = window.location.href;
-    const text = `Check out this ${product.name} on QuickStore!`;
+    const text = `Check out this ${product.name} on HomeNPlay!`;
     switch (platform) {
       case 'twitter': window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank'); break;
       case 'facebook': window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank'); break;
@@ -108,7 +105,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
     }
   };
 
-  const avgRating = reviews.length > 0 
+  const avgRating = reviews.length > 0
     ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
     : null;
 
@@ -132,9 +129,9 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 animate-in fade-in duration-500">
-      <button onClick={onBack} className="flex items-center text-slate-500 hover:text-indigo-600 mb-8 transition-colors group">
+      <button onClick={() => navigate(-1)} className="flex items-center text-slate-500 hover:text-indigo-600 mb-8 transition-colors group">
         <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-        Back to shopping
+        Back
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
@@ -147,7 +144,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
         <div className="flex flex-col">
           <div className="mb-2 text-sm font-bold text-indigo-600 uppercase tracking-widest">{product.category}</div>
           <h1 className="text-4xl font-extrabold text-slate-900 mb-2">{product.name}</h1>
-          
+
           <div className="flex items-center space-x-4 mb-6">
             <div className="flex items-center text-amber-500">
               {[1, 2, 3, 4, 5].map(s => (
@@ -158,7 +155,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </div>
 
           <div className="flex items-center space-x-4 mb-8">
-            <span className="text-3xl font-bold text-slate-900">${product.price.toFixed(2)}</span>
+            <span className="text-3xl font-bold text-slate-900">₹{product.price.toFixed(2)}</span>
             {product.stock > 0 ? (
               <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-100 uppercase">In Stock</span>
             ) : (
@@ -189,12 +186,11 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </div>
 
           <div className="mt-auto space-y-6">
-            <button 
+            <button
               disabled={product.stock === 0}
               onClick={() => onAddToCart(product)}
-              className={`w-full py-5 rounded-2xl font-bold text-lg flex items-center justify-center transition-all shadow-xl ${
-                product.stock === 0 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200'
-              }`}
+              className={`w-full py-5 rounded-2xl font-bold text-lg flex items-center justify-center transition-all shadow-xl ${product.stock === 0 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200'
+                }`}
             >
               <ShoppingCart className="h-5 w-5 mr-3" /> Add to Cart
             </button>
@@ -222,7 +218,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {relatedProducts.map(item => (
-              <ProductCard key={item.id} product={item} isFavorite={favorites.includes(item.id)} onAddToCart={onAddToCart} onViewDetails={onViewProduct} onToggleFavorite={onToggleFavorite} />
+              <ProductCard key={item.id} product={item} isFavorite={favorites.includes(item.id)} onAddToCart={onAddToCart} onViewDetails={(id) => navigate('/product/' + id)} onToggleFavorite={onToggleFavorite} />
             ))}
           </div>
         </section>
@@ -236,7 +232,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
             <p className="text-slate-500 text-sm">Real feedback from our community.</p>
           </div>
           {currentUser && (
-            <button 
+            <button
               onClick={() => setShowReviewForm(!showReviewForm)}
               className="px-6 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all flex items-center"
             >
@@ -270,16 +266,16 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Review Content</label>
-                <textarea 
-                  required 
-                  rows={4} 
+                <textarea
+                  required
+                  rows={4}
                   placeholder="What did you like or dislike? How's the quality?"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   className="w-full px-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
                 />
               </div>
-              <button 
+              <button
                 disabled={isSubmittingReview}
                 className="px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all disabled:opacity-50"
               >

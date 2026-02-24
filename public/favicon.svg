@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- White rounded background -->
+  <rect x="0" y="0" width="64" height="64" rx="14" ry="14" fill="white"/>
+
+  <!-- House roof (dark slate) -->
+  <polyline points="8,30 32,10 56,30" fill="none" stroke="#334155" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- H letter (left pillar) -->
+  <rect x="11" y="30" width="5" height="22" rx="1.5" fill="#334155"/>
+  <!-- H crossbar -->
+  <rect x="11" y="38" width="12" height="4.5" rx="1.5" fill="#334155"/>
+  <!-- H right pillar -->
+  <rect x="18" y="30" width="5" height="22" rx="1.5" fill="#334155"/>
+
+  <!-- N letter (copper/bronze) -->
+  <rect x="26" y="30" width="4.5" height="22" rx="1.5" fill="#b45309"/>
+  <line x1="30.5" y1="30" x2="35" y2="52" stroke="#b45309" stroke-width="4.5" stroke-linecap="round"/>
+  <rect x="35" y="30" width="4.5" height="22" rx="1.5" fill="#b45309"/>
+
+  <!-- P letter (dark slate) -->
+  <rect x="43" y="30" width="5" height="22" rx="1.5" fill="#334155"/>
+  <path d="M48,30 Q56,30 56,38.5 Q56,47 48,47 L48,30" fill="#334155"/>
+
+  <!-- Door (small rect inside H gap as detail) -->
+  <rect x="27.5" y="46" width="9" height="6" rx="1" fill="#334155"/>
+</svg>

@@ -5,7 +5,7 @@ import type { Order, Product } from "../types";
 export class AutomationService {
   // Fix: Strictly follow the guideline for initializing GoogleGenAI using process.env.API_KEY
   private get ai() {
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    return new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
   }
 
   async generateConfirmationEmail(order: Order): Promise<string> {
@@ -15,8 +15,8 @@ export class AutomationService {
         contents: `Draft a friendly, professional, and enthusiastic e-commerce order confirmation email for a customer named ${order.customerName}. 
                   Order ID: ${order.id}. 
                   Items: ${order.items.map(i => `${i.quantity}x ${i.name}`).join(', ')}. 
-                  Total: Rs. ${order.total.toFixed(2)}. 
-                  The brand is "QuickStore". Keep it concise but make the customer feel valued.`,
+                  Total: ₹${order.total.toFixed(2)}. 
+                  The brand is "HomeNPlay". Keep it concise but make the customer feel valued.`,
         config: {
           temperature: 0.7,
         },
@@ -32,11 +32,11 @@ export class AutomationService {
 
   async analyzeSupportQuery(message: string): Promise<string> {
     if (!message || message.length < 10) return "";
-    
+
     try {
       const response = await this.ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: `A customer is typing a support message for an e-commerce store called QuickStore. 
+        contents: `A customer is typing a support message for an e-commerce store called HomeNPlay. 
                   Based on their message: "${message}", provide a single, ultra-short (max 15 words) helpful suggestion or quick tip. 
                   If they mention shipping, mention 3-5 days. If they mention refund, mention 24h processing. 
                   Be concise and helpful. No preamble.`,
@@ -54,7 +54,7 @@ export class AutomationService {
     try {
       const response = await this.ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: `Act as a creative copywriter for an e-commerce store called "QuickStore". 
+        contents: `Act as a creative copywriter for an e-commerce store called "HomeNPlay". 
                   Analyze this product and provide 3 unique, punchy, and persuasive bullet points on "Why you'll love this".
                   Product Name: ${product.name}
                   Description: ${product.description}
@@ -78,7 +78,7 @@ export class AutomationService {
       name: 'navigateToPage',
       parameters: {
         type: Type.OBJECT,
-        description: 'Navigates the user to a specific page within the QuickStore application.',
+        description: 'Navigates the user to a specific page within the HomeNPlay application.',
         properties: {
           page: {
             type: Type.STRING,
@@ -97,7 +97,7 @@ export class AutomationService {
           { role: 'user', parts: [{ text: message }] }
         ],
         config: {
-          systemInstruction: `You are the QuickStore Virtual Assistant. Your goal is to help users browse products, manage their accounts, and navigate the store. 
+          systemInstruction: `You are the HomeNPlay Virtual Assistant. Your goal is to help users browse products, manage their accounts, and navigate the store. 
           Be friendly, professional, and helpful. 
           
           FORMATTING RULES:

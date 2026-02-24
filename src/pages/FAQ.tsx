@@ -11,13 +11,13 @@ interface FAQItem {
 const FAQ_DATA: FAQItem[] = [
   {
     category: 'General',
-    question: "What is QuickStore?",
-    answer: "QuickStore is a market validation platform designed for entrepreneurs to test product-market fit. While the store functions as a real e-commerce experience, it helps creators gather data on which products resonate most with customers."
+    question: "What is HomeNPlay?",
+    answer: "HomeNPlay is your go-to destination for home essentials and family fun. We curate quality products for modern living — from kitchen tools to toys and lifestyle gadgets — all delivered to your door."
   },
   {
     category: 'General',
     question: "Are these products real and available?",
-    answer: "Yes, all products listed on QuickStore are either currently in stock or available through our validation partners. If a product is for testing purposes only, it will be clearly marked."
+    answer: "Yes, all products listed on HomeNPlay are either currently in stock or available through our fulfillment partners. If a product is temporarily unavailable, it will be clearly marked."
   },
   {
     category: 'Shipping',
@@ -37,7 +37,7 @@ const FAQ_DATA: FAQItem[] = [
   {
     category: 'Payments',
     question: "Is my payment information secure?",
-    answer: "Absolutely. We use industry-standard encryption and secure payment gateways. QuickStore does not store your full card details on our servers."
+    answer: "Absolutely. We use industry-standard encryption and secure payment gateways. HomeNPlay does not store your full card details on our servers."
   },
   {
     category: 'Orders',
@@ -75,35 +75,32 @@ export const FAQ: React.FC = () => {
         </div>
         <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Frequently Asked Questions</h1>
         <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-          Everything you need to know about shopping on QuickStore and how we help validate great ideas.
+          Everything you need to know about shopping on HomeNPlay.
         </p>
       </div>
 
       <div className="space-y-4">
         {FAQ_DATA.map((item, index) => (
-          <div 
-            key={index} 
-            className={`bg-white rounded-2xl border transition-all duration-300 ${
-              openIndex === index ? 'border-indigo-200 shadow-lg shadow-indigo-50/50' : 'border-slate-100 shadow-sm hover:border-slate-200'
-            }`}
+          <div
+            key={index}
+            className={`bg-white rounded-2xl border transition-all duration-300 ${openIndex === index ? 'border-indigo-200 shadow-lg shadow-indigo-50/50' : 'border-slate-100 shadow-sm hover:border-slate-200'
+              }`}
           >
             <button
               onClick={() => toggleAccordion(index)}
               className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
             >
               <div className="flex items-center space-x-4">
-                <div className={`p-2 rounded-xl transition-colors ${
-                  openIndex === index ? 'bg-indigo-600 text-white' : 'bg-slate-50 text-slate-400'
-                }`}>
+                <div className={`p-2 rounded-xl transition-colors ${openIndex === index ? 'bg-indigo-600 text-white' : 'bg-slate-50 text-slate-400'
+                  }`}>
                   {getCategoryIcon(item.category)}
                 </div>
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 block mb-1">
                     {item.category}
                   </span>
-                  <h3 className={`text-lg font-bold transition-colors ${
-                    openIndex === index ? 'text-indigo-900' : 'text-slate-800'
-                  }`}>
+                  <h3 className={`text-lg font-bold transition-colors ${openIndex === index ? 'text-indigo-900' : 'text-slate-800'
+                    }`}>
                     {item.question}
                   </h3>
                 </div>
@@ -112,11 +109,10 @@ export const FAQ: React.FC = () => {
                 <ChevronDown className="h-5 w-5" />
               </div>
             </button>
-            
-            <div 
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }`}
+
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               <div className="px-6 pb-6 pl-16 text-slate-600 leading-relaxed border-t border-slate-50 pt-4">
                 {item.answer}
@@ -138,7 +134,7 @@ export const FAQ: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="mt-12 flex items-center justify-center space-x-8 text-slate-400">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="h-4 w-4" />

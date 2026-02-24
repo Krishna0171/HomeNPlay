@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import type { Product, Order, DashboardStats, OrderStatus, Category, SupportTicket,  Review } from '../types';
+import type { Product, Order, DashboardStats, OrderStatus, Category, SupportTicket, Review } from '../types';
 import { Loader } from '../components/Loader';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -22,7 +22,7 @@ export const AdminDashboard: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  
+
   const [productSearch, setProductSearch] = useState('');
   // const [productCategoryFilter, setProductCategoryFilter] = useState<Category | 'All'>('All');
   // const [productSortBy, setProductSortBy] = useState<'newest' | 'price-low' | 'price-high' | 'stock-low' | 'name-az'>('newest');
@@ -124,7 +124,7 @@ export const AdminDashboard: React.FC = () => {
     } else {
       await api.addProduct(productData);
     }
-    
+
     setEditingProduct(null);
     setShowAddModal(false);
     await loadData();
@@ -153,8 +153,8 @@ export const AdminDashboard: React.FC = () => {
   const filteredTickets = tickets.filter(t => {
     const matchesFilter = ticketFilter === 'All' || t.status === ticketFilter;
     const matchesSearch = t.subject.toLowerCase().includes(ticketSearch.toLowerCase()) ||
-                          t.email.toLowerCase().includes(ticketSearch.toLowerCase()) ||
-                          t.id.toLowerCase().includes(ticketSearch.toLowerCase());
+      t.email.toLowerCase().includes(ticketSearch.toLowerCase()) ||
+      t.id.toLowerCase().includes(ticketSearch.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -162,9 +162,9 @@ export const AdminDashboard: React.FC = () => {
     .filter(o => {
       const matchesFilter = orderStatusFilter === 'All' || o.status === orderStatusFilter;
       const searchLower = orderSearch.toLowerCase();
-      const matchesSearch = o.id.toLowerCase().includes(searchLower) || 
-                            o.customerName.toLowerCase().includes(searchLower) ||
-                            o.customerEmail?.toLowerCase().includes(searchLower);
+      const matchesSearch = o.id.toLowerCase().includes(searchLower) ||
+        o.customerName.toLowerCase().includes(searchLower) ||
+        o.customerEmail?.toLowerCase().includes(searchLower);
       return matchesFilter && matchesSearch;
     })
     .sort((a, b) => {
@@ -181,8 +181,8 @@ export const AdminDashboard: React.FC = () => {
     .filter(p => {
       const matchesCategory = productCategoryFilter === 'All' || p.category === productCategoryFilter;
       const searchLower = productSearch.toLowerCase();
-      const matchesSearch = p.name.toLowerCase().includes(searchLower) || 
-                            p.description.toLowerCase().includes(searchLower);
+      const matchesSearch = p.name.toLowerCase().includes(searchLower) ||
+        p.description.toLowerCase().includes(searchLower);
       return matchesCategory && matchesSearch;
     })
     .sort((a, b) => {
@@ -196,7 +196,7 @@ export const AdminDashboard: React.FC = () => {
       }
     });
 
-  const filteredReviews = reviews.filter(r => 
+  const filteredReviews = reviews.filter(r =>
     r.comment.toLowerCase().includes(reviewSearch.toLowerCase()) ||
     r.userName.toLowerCase().includes(reviewSearch.toLowerCase())
   );
@@ -206,8 +206,8 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="p-4 sm:p-8 max-w-7xl mx-auto min-h-screen bg-slate-50 relative">
       {loading && stats && <div className="absolute inset-0 z-50 bg-white/50 backdrop-blur-[2px] rounded-3xl" />}
-      
-      <ConfirmationModal 
+
+      <ConfirmationModal
         isOpen={productToDelete !== null}
         title="Delete Product"
         message="Are you sure you want to permanently delete this product? This action cannot be undone."
@@ -217,7 +217,7 @@ export const AdminDashboard: React.FC = () => {
         onClose={() => setProductToDelete(null)}
       />
 
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={reviewToDelete !== null}
         title="Delete Review"
         message="Are you sure you want to permanently remove this customer review? It will no longer appear on product pages."
@@ -233,7 +233,7 @@ export const AdminDashboard: React.FC = () => {
           <p className="text-slate-500 text-sm">Monitor your store performance and manage logistics.</p>
         </div>
         <div className="flex space-x-3 w-full sm:w-auto">
-          <button 
+          <button
             onClick={() => { setEditingProduct(null); setShowAddModal(true); }}
             className="flex-1 sm:flex-none justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center shadow-lg shadow-indigo-100"
           >
@@ -247,11 +247,10 @@ export const AdminDashboard: React.FC = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab as any)}
-            className={`pb-4 px-1 text-sm font-semibold transition-all capitalize whitespace-nowrap ${
-              activeTab === tab 
-                ? 'border-b-2 border-indigo-600 text-indigo-600' 
+            className={`pb-4 px-1 text-sm font-semibold transition-all capitalize whitespace-nowrap ${activeTab === tab
+                ? 'border-b-2 border-indigo-600 text-indigo-600'
                 : 'text-slate-500 hover:text-slate-700'
-            }`}
+              }`}
           >
             {tab === 'tickets' && stats?.openTicketsCount ? (
               <span className="flex items-center">
@@ -273,7 +272,7 @@ export const AdminDashboard: React.FC = () => {
                 <span className="text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-1 rounded">+12.5%</span>
               </div>
               <h3 className="text-slate-500 text-xs font-medium uppercase tracking-wider">Total Revenue</h3>
-              <p className="text-2xl font-bold text-slate-900">${stats.totalRevenue.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-slate-900">₹{stats.totalRevenue.toFixed(2)}</p>
             </div>
 
             <div onClick={() => setActiveTab('orders')} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all group">
@@ -314,8 +313,8 @@ export const AdminDashboard: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={orders.slice(0, 10).reverse().map(o => ({ date: new Date(o.createdAt).toLocaleDateString(), value: o.total }))}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#64748b'}} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#64748b'}} />
+                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
                     <Tooltip />
                     <Area type="monotone" dataKey="value" stroke="#6366f1" fillOpacity={1} fill="#6366f1" />
                   </AreaChart>
@@ -337,7 +336,7 @@ export const AdminDashboard: React.FC = () => {
                         <p className="text-[10px] text-slate-500 uppercase font-mono">{order.id}</p>
                       </div>
                     </div>
-                    <span className="text-sm font-bold text-slate-900">${order.total.toFixed(2)}</span>
+                    <span className="text-sm font-bold text-slate-900">₹{order.total.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -377,7 +376,7 @@ export const AdminDashboard: React.FC = () => {
                       <td className="px-6 py-4">
                         <p className="text-sm font-bold text-slate-900">{order.customerName}</p>
                       </td>
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900">${order.total.toFixed(2)}</td>
+                      <td className="px-6 py-4 text-sm font-bold text-slate-900">₹{order.total.toFixed(2)}</td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase ${getStatusColor(order.status)}`}>{order.status}</span>
                       </td>
@@ -401,9 +400,9 @@ export const AdminDashboard: React.FC = () => {
           <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Search reviews..." 
+              <input
+                type="text"
+                placeholder="Search reviews..."
                 value={reviewSearch}
                 onChange={(e) => setReviewSearch(e.target.value)}
                 className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:ring-1 focus:ring-indigo-500 outline-none"
@@ -428,7 +427,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setReviewToDelete(review.id)}
                     className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
                     title="Delete Review"
@@ -438,8 +437,8 @@ export const AdminDashboard: React.FC = () => {
                 </div>
                 <p className="text-slate-600 text-sm leading-relaxed mb-4 italic line-clamp-3">"{review.comment}"</p>
                 <div className="flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-auto pt-4 border-t border-slate-50">
-                   <span>Product: {products.find(p => p.id === review.productId)?.name || 'Unknown'}</span>
-                   <span>{new Date(review.createdAt).toLocaleDateString()}</span>
+                  <span>Product: {products.find(p => p.id === review.productId)?.name || 'Unknown'}</span>
+                  <span>{new Date(review.createdAt).toLocaleDateString()}</span>
                 </div>
               </div>
             )) : (
@@ -468,7 +467,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex-1">
                     <h4 className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1">{product.name}</h4>
                     <span className="text-[9px] sm:text-[10px] font-medium text-indigo-600 px-1.5 py-0.5 bg-indigo-50 rounded">{product.category}</span>
-                    <p className="font-bold text-indigo-600 mt-2 text-sm sm:text-base">${product.price.toFixed(2)}</p>
+                    <p className="font-bold text-indigo-600 mt-2 text-sm sm:text-base">₹{product.price.toFixed(2)}</p>
                   </div>
                 </div>
                 <div className="flex justify-end gap-2 pt-3 border-t border-slate-50 mt-auto">

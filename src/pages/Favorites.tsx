@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Product } from '../types';
 import { api } from '../services/api';
 import { ProductCard } from '../components/ProductCard';
@@ -8,17 +9,16 @@ import { Loader } from '../components/Loader';
 
 interface FavoritesProps {
   onAddToCart: (p: Product) => void;
-  onViewProduct: (id: string) => void;
   favorites: string[];
   onToggleFavorite: (id: string) => void;
 }
 
-export const Favorites: React.FC<FavoritesProps> = ({ 
-  onAddToCart, 
-  onViewProduct, 
+export const Favorites: React.FC<FavoritesProps> = ({
+  onAddToCart,
   favorites,
-  onToggleFavorite 
+  onToggleFavorite
 }) => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,8 +33,8 @@ export const Favorites: React.FC<FavoritesProps> = ({
     load();
   }, [favorites]);
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredProducts = products.filter(p =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -50,13 +50,13 @@ export const Favorites: React.FC<FavoritesProps> = ({
           </h1>
           <p className="text-slate-500 mt-1">Products you've saved for later.</p>
         </div>
-        
+
         {products.length > 0 && (
           <div className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search in wishlist..." 
+            <input
+              type="text"
+              placeholder="Search in wishlist..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm"
@@ -74,8 +74,8 @@ export const Favorites: React.FC<FavoritesProps> = ({
           <p className="text-slate-500 max-w-sm mb-10 leading-relaxed">
             Found something you like? Click the heart icon to save it here for later.
           </p>
-          <button 
-            onClick={() => window.location.href = '#'} // This would effectively go to Shop
+          <button
+            onClick={() => navigate('/')}
             className="px-8 py-4 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center"
           >
             <ShoppingBag className="h-5 w-5 mr-2" /> Start Shopping
@@ -84,12 +84,12 @@ export const Favorites: React.FC<FavoritesProps> = ({
       ) : filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map(product => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
+            <ProductCard
+              key={product.id}
+              product={product}
               isFavorite={true}
-              onAddToCart={onAddToCart} 
-              onViewDetails={onViewProduct}
+              onAddToCart={onAddToCart}
+              onViewDetails={(id) => navigate('/product/' + id)}
               onToggleFavorite={onToggleFavorite}
             />
           ))}

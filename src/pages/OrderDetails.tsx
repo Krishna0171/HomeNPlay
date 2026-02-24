@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import type { Order, OrderStatus } from '../types';
 import { api } from '../services/api';
 import { Loader } from '../components/Loader';
@@ -16,12 +17,11 @@ import {
   Banknote
 } from 'lucide-react';
 
-interface OrderDetailsProps {
-  orderId: string;
-  onBack: () => void;
-}
+interface OrderDetailsProps { }
 
-export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) => {
+export const OrderDetails: React.FC<OrderDetailsProps> = () => {
+  const { id: orderId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -70,7 +70,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Order Not Found</h2>
         <p className="text-slate-500 mb-8">We couldn't find the order details you're looking for.</p>
         <button
-          onClick={onBack}
+          onClick={() => navigate('/my-orders')} // Fallback or maybe home if no history
           className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl"
         >
           Back to My Orders
@@ -84,8 +84,8 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <button 
-        onClick={onBack}
+      <button
+        onClick={() => navigate('/my-orders')}
         className="flex items-center text-slate-500 hover:text-indigo-600 mb-8 transition-colors group"
       >
         <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -101,12 +101,11 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
         </div>
         <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-sm">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Status:</span>
-          <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${
-            order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
+          <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
             order.status === 'Shipped' ? 'bg-indigo-50 text-indigo-700' :
-            order.status === 'Cancelled' ? 'bg-red-50 text-red-700' :
-            'bg-blue-50 text-blue-700'
-          }`}>
+              order.status === 'Cancelled' ? 'bg-red-50 text-red-700' :
+                'bg-blue-50 text-blue-700'
+            }`}>
             {order.status}
           </span>
         </div>
@@ -120,25 +119,23 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
             <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
               <div className="flex justify-between items-center relative mb-2">
                 <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 z-0"></div>
-                <div 
+                <div
                   className="absolute top-1/2 left-0 h-1 bg-indigo-600 -translate-y-1/2 z-0 transition-all duration-1000"
                   style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
                 ></div>
-                
+
                 {[
                   { icon: Clock, label: 'Processing' },
                   { icon: Truck, label: 'Shipped' },
                   { icon: CheckCircle, label: 'Delivered' }
                 ].map((step, i) => (
                   <div key={i} className="relative z-10 flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-500 ${
-                      i + 1 <= currentStep ? 'bg-indigo-600 border-indigo-100 text-white' : 'bg-white border-slate-100 text-slate-300'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-500 ${i + 1 <= currentStep ? 'bg-indigo-600 border-indigo-100 text-white' : 'bg-white border-slate-100 text-slate-300'
+                      }`}>
                       <step.icon className="h-5 w-5" />
                     </div>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider mt-2 ${
-                      i + 1 <= currentStep ? 'text-indigo-600' : 'text-slate-400'
-                    }`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider mt-2 ${i + 1 <= currentStep ? 'text-indigo-600' : 'text-slate-400'
+                      }`}>
                       {step.label}
                     </span>
                   </div>
@@ -162,8 +159,8 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
                     <p className="text-xs text-slate-500 mt-1">{item.category}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-slate-900">${(item.price * item.quantity).toFixed(2)}</p>
-                    <p className="text-xs text-slate-500">{item.quantity} x ${item.price.toFixed(2)}</p>
+                    <p className="text-sm font-bold text-slate-900">₹{(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-xs text-slate-500">{item.quantity} x ₹{item.price.toFixed(2)}</p>
                   </div>
                 </div>
               ))}
@@ -200,29 +197,29 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId, onBack }) =
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-slate-500">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-500">
                 <span>Shipping</span>
-                <span>{shipping === 0 ? 'FREE' : `Rs. ${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}</span>
               </div>
               <div className="flex justify-between items-center py-2 px-3 bg-white rounded-xl border border-indigo-50 text-[10px] uppercase font-bold text-slate-400 mt-2">
                 <div className="flex items-center space-x-1">
-                   {getPaymentIcon(order.paymentMethod)}
-                   <span>{order.paymentMethod}</span>
+                  {getPaymentIcon(order.paymentMethod)}
+                  <span>{order.paymentMethod}</span>
                 </div>
                 <span className="text-emerald-500">Confirmed</span>
               </div>
               <div className="h-px bg-slate-200 my-4"></div>
               <div className="flex justify-between text-lg font-bold text-slate-900">
                 <span>Total Paid</span>
-                <span className="text-indigo-600">${order.total.toFixed(2)}</span>
+                <span className="text-indigo-600">₹{order.total.toFixed(2)}</span>
               </div>
             </div>
             <div className="mt-6 p-4 bg-white rounded-2xl border border-indigo-100 flex items-center space-x-3">
               <ShieldCheck className="h-5 w-5 text-emerald-500" />
               <span className="text-[10px] font-bold text-slate-500 uppercase leading-tight">
-                Verified Secure <br/> Transaction
+                Verified Secure <br /> Transaction
               </span>
             </div>
           </div>

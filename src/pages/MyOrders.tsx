@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Order, OrderStatus } from '../types';
 import { api } from '../services/api';
 import { Loader } from '../components/Loader';
@@ -7,11 +8,10 @@ import { ShoppingBag, Package, Truck, CheckCircle, Clock, ChevronRight, Search, 
 
 interface MyOrdersProps {
   userId: string;
-  onNavigateToHome: () => void;
-  onSelectOrder: (orderId: string) => void;
 }
 
-export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, onSelectOrder }) => {
+export const MyOrders: React.FC<MyOrdersProps> = ({ userId }) => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,8 +30,8 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
   }, [userId]);
 
   const filteredOrders = orders.filter(o => {
-    const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          o.items.some(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      o.items.some(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesStatus = statusFilter === 'All' || o.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -65,7 +65,7 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
         <h2 className="text-2xl font-bold text-slate-900 mb-2">No orders yet</h2>
         <p className="text-slate-500 mb-8">When you place an order, it will appear here for you to track.</p>
         <button
-          onClick={onNavigateToHome}
+          onClick={() => navigate('/')}
           className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
         >
           Start Shopping
@@ -85,9 +85,9 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
         <div className="flex flex-col gap-5">
           <div className="relative w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search by Order ID or Item..." 
+            <input
+              type="text"
+              placeholder="Search by Order ID or Item..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-all"
@@ -103,11 +103,10 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
                 <button
                   key={s}
                   onClick={() => setStatusFilter(s as any)}
-                  className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-all border ${
-                    statusFilter === s 
-                    ? 'bg-indigo-600 text-white border-indigo-600' 
+                  className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-all border ${statusFilter === s
+                    ? 'bg-indigo-600 text-white border-indigo-600'
                     : 'bg-white text-slate-500 border-slate-100 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   {s}
                 </button>
@@ -134,7 +133,7 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
                 <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</p>
-                    <p className="text-sm font-bold text-indigo-600">${order.total.toFixed(2)}</p>
+                    <p className="text-sm font-bold text-indigo-600">₹{order.total.toFixed(2)}</p>
                   </div>
                   <div className={`px-2.5 py-1 rounded-lg border flex items-center space-x-1.5 text-[10px] font-bold uppercase ${getStatusBg(order.status)}`}>
                     {getStatusIcon(order.status)}
@@ -150,7 +149,7 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
                       <img src={item.image} className="w-10 h-10 rounded-lg object-cover border border-slate-100" alt="" />
                       <div className="flex-1">
                         <p className="text-sm font-bold text-slate-800 line-clamp-1">{item.name}</p>
-                        <p className="text-[10px] text-slate-500">Qty: {item.quantity} × ${item.price.toFixed(2)}</p>
+                        <p className="text-[10px] text-slate-500">Qty: {item.quantity} × ₹{item.price.toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
@@ -165,8 +164,8 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
                       </span>
                     </span>
                   </div>
-                  <button 
-                    onClick={() => onSelectOrder(order.id)}
+                  <button
+                    onClick={() => navigate('/order/' + order.id)}
                     className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center justify-center px-4 py-2 bg-indigo-50/50 rounded-xl transition-colors w-full sm:w-auto"
                   >
                     View Details <ChevronRight className="h-3.5 w-3.5 ml-1" />
@@ -179,7 +178,7 @@ export const MyOrders: React.FC<MyOrdersProps> = ({ userId, onNavigateToHome, on
       ) : (
         <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200">
           <p className="text-slate-400 text-sm">No orders match your current filters.</p>
-          <button 
+          <button
             onClick={() => { setSearchQuery(''); setStatusFilter('All'); }}
             className="mt-4 text-xs font-bold text-indigo-600 hover:underline"
           >

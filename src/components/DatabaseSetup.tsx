@@ -43,7 +43,7 @@ export const DatabaseSetup: React.FC<DatabaseSetupProps> = ({ onComplete }) => {
           </div>
           <div className="relative z-10">
             <h1 className="text-3xl font-extrabold mb-2">Initialize Your Database</h1>
-            <p className="text-indigo-100 opacity-90">QuickStore detected an empty Supabase project. Let's build your structure.</p>
+            <p className="text-indigo-100 opacity-90">HomeNPlay detected an empty Supabase project. Let's build your structure.</p>
           </div>
         </div>
 
@@ -55,7 +55,7 @@ export const DatabaseSetup: React.FC<DatabaseSetupProps> = ({ onComplete }) => {
               <h2 className="text-lg font-bold text-slate-900">Try Automatic Setup</h2>
             </div>
             <p className="text-sm text-slate-500">If you've already added the <b>exec_sql</b> RPC to your project, we can build everything for you right now.</p>
-            <button 
+            <button
               onClick={handleAutoSetup}
               disabled={loading}
               className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all flex items-center justify-center disabled:opacity-50"
@@ -74,12 +74,12 @@ export const DatabaseSetup: React.FC<DatabaseSetupProps> = ({ onComplete }) => {
               <h2 className="text-lg font-bold text-slate-900">Manual Initialization</h2>
             </div>
             <p className="text-sm text-slate-500">Go to your <a href="https://supabase.com/dashboard" target="_blank" className="text-indigo-600 font-bold hover:underline inline-flex items-center">Supabase Dashboard <ExternalLink className="h-3 w-3 ml-1" /></a>, open the <b>SQL Editor</b>, and run this script:</p>
-            
+
             <div className="space-y-4">
               <div className="relative">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center"><Terminal className="h-3 w-3 mr-1" /> Schema Script</span>
-                  <button 
+                  <button
                     onClick={() => handleCopy(schemaSQL, 'schema')}
                     className="text-indigo-600 text-xs font-bold flex items-center hover:bg-indigo-50 px-2 py-1 rounded transition-colors"
                   >
@@ -103,7 +103,7 @@ export const DatabaseSetup: React.FC<DatabaseSetupProps> = ({ onComplete }) => {
               <div className="relative">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center"><Terminal className="h-3 w-3 mr-1" /> Optional: RPC Setup</span>
-                  <button 
+                  <button
                     onClick={() => handleCopy(rpcSQL, 'rpc')}
                     className="text-indigo-600 text-xs font-bold flex items-center hover:bg-indigo-50 px-2 py-1 rounded transition-colors"
                   >
@@ -122,7 +122,7 @@ export const DatabaseSetup: React.FC<DatabaseSetupProps> = ({ onComplete }) => {
 
         <div className="p-8 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
           <p className="text-xs text-slate-400">Structure ready? Click refresh below.</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-8 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 shadow-sm transition-all"
           >

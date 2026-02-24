@@ -11,7 +11,7 @@ export const MyTickets: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState('');
   const [isSending, setIsSending] = useState(false);
-  
+
   const currentUser = api.getCurrentUser();
 
   const loadTickets = async () => {
@@ -57,7 +57,7 @@ export const MyTickets: React.FC = () => {
   if (selectedTicket) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-12 animate-in fade-in slide-in-from-right-4 duration-300">
-        <button 
+        <button
           onClick={() => setSelectedTicket(null)}
           className="flex items-center text-slate-500 hover:text-indigo-600 mb-8 group"
         >
@@ -96,18 +96,17 @@ export const MyTickets: React.FC = () => {
 
             {/* Replies */}
             {selectedTicket.replies.map((reply) => (
-              <div 
-                key={reply.id} 
+              <div
+                key={reply.id}
                 className={`flex flex-col max-w-[85%] ${reply.sender === 'Admin' ? 'items-end ml-auto' : 'items-start'}`}
               >
-                <div className={`p-4 rounded-2xl text-sm ${
-                  reply.sender === 'Admin' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none' 
+                <div className={`p-4 rounded-2xl text-sm ${reply.sender === 'Admin'
+                    ? 'bg-indigo-600 text-white rounded-tr-none'
                     : 'bg-slate-100 text-slate-800 rounded-tl-none'
-                }`}>
+                  }`}>
                   <p className="font-bold mb-1 flex items-center">
                     {reply.sender === 'Admin' ? <ShieldCheck className="h-3 w-3 mr-1" /> : <User className="h-3 w-3 mr-1" />}
-                    {reply.sender === 'Admin' ? 'QuickStore Support' : 'You'}
+                    {reply.sender === 'Admin' ? 'HomeNPlay Support' : 'You'}
                   </p>
                   {reply.message}
                 </div>
@@ -128,7 +127,7 @@ export const MyTickets: React.FC = () => {
                   value={reply}
                   onChange={(e) => setReply(e.target.value)}
                 ></textarea>
-                <button 
+                <button
                   onClick={handleSendReply}
                   disabled={!reply.trim() || isSending}
                   className="absolute right-3 bottom-3 p-3 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 disabled:opacity-50 transition-all"
@@ -162,7 +161,7 @@ export const MyTickets: React.FC = () => {
           </div>
           <h2 className="text-xl font-bold text-slate-800 mb-2">No tickets found</h2>
           <p className="text-slate-500 max-w-xs mx-auto mb-8">You haven't raised any support requests yet.</p>
-          <button 
+          <button
             onClick={() => window.location.href = '#'} // This would navigate to support
             className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl"
           >
@@ -172,8 +171,8 @@ export const MyTickets: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {tickets.map((ticket) => (
-            <div 
-              key={ticket.id} 
+            <div
+              key={ticket.id}
               onClick={() => setSelectedTicket(ticket)}
               className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
             >
